@@ -18,7 +18,7 @@ Uma maneira fácil de interagir com as principais funcionalidades dos [Correios]
 Via Composer
 
 ``` bash
-composer require flyingluscas/correios-php
+composer require jeffersonsimaogoncalves/correios-php
 ```
 
 ## Uso
@@ -119,6 +119,7 @@ Se você descobrir quaisquer problemas relacionados à segurança, envie um e-ma
 ## Créditos
 
 - [Lucas Pires][link-author]
+- [Jefferson Simão Gonçalves](https://github.com/jeffersonsimaogoncalves)
 - [Todos os contribuidores][link-contributors]
 
 ## Licença

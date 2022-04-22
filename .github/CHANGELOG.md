@@ -4,6 +4,14 @@ Todas as mudanças importantes em `correios-php` serão documentadas neste arqui
 
 Atualizações devem seguir os princípios de [Keep a CHANGELOG](http://keepachangelog.com/).
 
+## v2.5.0 - 2022-04-22
+
+### Changed
+- Atualização do `php` para a versão `8.0`.
+- Atualização do `phpunit/phpunit` para a versão `9.5`.
+- Atualização do `squizlabs/php_codesniffer` para a versão `3.6`.
+- Adicionando `dms/phpunit-arraysubset-asserts` manter a compatibilidade dos testes.
+
 ## v2.4.0 - 2020-11-01
 
 ### Changed

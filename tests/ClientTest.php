@@ -12,19 +12,19 @@ class ClientTest extends TestCase
      */
     protected $correios;
 
-    public function setUp()
+    public function setUp():void
     {
         parent::setUp();
 
         $this->correios = new Client();
     }
 
-    public function testFreightService()
+    public function testFreightService(): void
     {
         $this->assertInstanceOf(FreightInterface::class, $this->correios->freight());
     }
 
-    public function testZipCodeService()
+    public function testZipCodeService(): void
     {
         $this->assertInstanceOf(ZipCodeInterface::class, $this->correios->zipcode());
     }

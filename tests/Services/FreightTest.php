@@ -2,6 +2,7 @@
 
 namespace FlyingLuscas\Correios\Services;
 
+use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
 use FlyingLuscas\Correios\PackageType;
 use FlyingLuscas\Correios\Service;
 use FlyingLuscas\Correios\TestCase;
@@ -9,12 +10,13 @@ use GuzzleHttp\Client as HttpClient;
 
 class FreightTest extends TestCase
 {
+    use ArraySubsetAsserts;
     /**
      * @var \FlyingLuscas\Correios\Services\Freight
      */
     protected $freight;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -23,19 +25,55 @@ class FreightTest extends TestCase
         $this->freight = new Freight($http);
     }
 
-    public function testSetOrigin()
+    /**
+     * @return void
+     * @throws \Exception
+     */
+    public function testSetOrigin(): void
     {
         $this->assertInstanceOf(Freight::class, $this->freight->origin('99999-999'));
         $this->assertPayloadHas('sCepOrigem', '99999999');
     }
 
-    public function testSetDestination()
+    /**
+     * Asserts payload has a given key and value.
+     *
+     * @param string $key
+     * @param mixed $value
+     *
+     * @return self
+     * @throws \Exception
+     */
+    protected function assertPayloadHas($key, $value = null): static
+    {
+        if (is_null($value)) {
+            $this->assertArrayHasKey($key, $this->freight->payload());
+
+            return $this;
+        }
+
+        self::assertArraySubset([
+            $key => $value,
+        ], $this->freight->payload(Service::SEDEX));
+
+        return $this;
+    }
+
+    /**
+     * @return void
+     * @throws \Exception
+     */
+    public function testSetDestination(): void
     {
         $this->assertInstanceOf(Freight::class, $this->freight->destination('99999-999'));
         $this->assertPayloadHas('sCepDestino', '99999999');
     }
 
-    public function testSetServices()
+    /**
+     * @return void
+     * @throws \Exception
+     */
+    public function testSetServices(): void
     {
         $sedex = Service::SEDEX;
 
@@ -44,7 +82,11 @@ class FreightTest extends TestCase
         $this->assertPayloadHas('nCdServico', $sedex);
     }
 
-    public function testPayloadWidth()
+    /**
+     * @return void
+     * @throws \Exception
+     */
+    public function testPayloadWidth(): void
     {
         $this->freight->item(1, 10, 10, 10, 1)
             ->item(2.5, 10, 10, 10, 1)
@@ -53,7 +95,11 @@ class FreightTest extends TestCase
         $this->assertPayloadHas('nVlLargura', 2.5);
     }
 
-    public function testPayloadHeight()
+    /**
+     * @return void
+     * @throws \Exception
+     */
+    public function testPayloadHeight(): void
     {
         $this->freight->item(10, 1, 10, 10, 1)
             ->item(10, 2.5, 10, 10, 1)
@@ -62,7 +108,11 @@ class FreightTest extends TestCase
         $this->assertPayloadHas('nVlAltura', 5.5);
     }
 
-    public function testPayloadLength()
+    /**
+     * @return void
+     * @throws \Exception
+     */
+    public function testPayloadLength(): void
     {
         $this->freight->item(10, 10, 1, 10, 1)
             ->item(10, 10, 2.5, 10, 1)
@@ -71,7 +121,11 @@ class FreightTest extends TestCase
         $this->assertPayloadHas('nVlComprimento', 2.5);
     }
 
-    public function testPayloadWeight()
+    /**
+     * @return void
+     * @throws \Exception
+     */
+    public function testPayloadWeight(): void
     {
         $this->freight->item(10, 10, 10, 1, 1)
             ->item(10, 10, 10, 2.5, 1)
@@ -80,7 +134,11 @@ class FreightTest extends TestCase
         $this->assertPayloadHas('nVlPeso', 5.5);
     }
 
-    public function testPayloadWeightWithVolume()
+    /**
+     * @return void
+     * @throws \Exception
+     */
+    public function testPayloadWeightWithVolume(): void
     {
         $this->freight->item(50, 50, 50, 1, 1)
             ->item(50, 50, 50, 2.5, 1)
@@ -89,7 +147,11 @@ class FreightTest extends TestCase
         $this->assertPayloadHas('nVlPeso', 62.5);
     }
 
-    public function testSetCredentials()
+    /**
+     * @return void
+     * @throws \Exception
+     */
+    public function testSetCredentials(): void
     {
         $code = '08082650';
         $password = 'n5f9t8';
@@ -101,14 +163,21 @@ class FreightTest extends TestCase
 
     /**
      * @dataProvider packageFormatProvider
+     * @param $format
+     * @return void
+     * @throws \Exception
      */
-    public function testSetPackageFormat($format)
+    public function testSetPackageFormat($format): void
     {
         $this->assertInstanceOf(Freight::class, $this->freight->package($format));
         $this->assertPayloadHas('nCdFormato', $format);
     }
 
-    public function testSetOwnHand()
+    /**
+     * @return void
+     * @throws \Exception
+     */
+    public function testSetOwnHand(): void
     {
         $this->assertInstanceOf(Freight::class, $this->freight->useOwnHand(false));
         $this->assertPayloadHas('sCdMaoPropria', 'N');
@@ -117,7 +186,11 @@ class FreightTest extends TestCase
         $this->assertPayloadHas('sCdMaoPropria', 'S');
     }
 
-    public function testSetDeclaredValue()
+    /**
+     * @return void
+     * @throws \Exception
+     */
+    public function testSetDeclaredValue(): void
     {
         $value = 10.38;
 
@@ -130,34 +203,12 @@ class FreightTest extends TestCase
      *
      * @return array
      */
-    public function packageFormatProvider()
+    public function packageFormatProvider(): array
     {
         return [
             [PackageType::BOX],
             [PackageType::ROLL],
             [PackageType::ENVELOPE],
         ];
-    }
-
-    /**
-     * Asserts payload has a given key and value.
-     *
-     * @param  sring $key
-     * @param  mixed $value
-     *
-     * @return self
-     */
-    protected function assertPayloadHas($key, $value = null)
-    {
-        if (is_null($value)) {
-            $this->assertArrayHasKey($key, $this->freight->payload());
-            return $this;
-        }
-
-        $this->assertArraySubset([
-            $key => $value,
-        ], $this->freight->payload(Service::SEDEX));
-
-        return $this;
     }
 }

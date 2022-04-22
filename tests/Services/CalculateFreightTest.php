@@ -5,8 +5,8 @@ namespace FlyingLuscas\Correios\Services;
 use FlyingLuscas\Correios\Service;
 use FlyingLuscas\Correios\TestCase;
 use GuzzleHttp\Client as HttpClient;
-use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
 
 class CalculateFreightTest extends TestCase
@@ -46,7 +46,7 @@ class CalculateFreightTest extends TestCase
      */
     protected $mock;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -119,7 +119,7 @@ class CalculateFreightTest extends TestCase
         ]);
     }
 
-    public function testInvalidServiceError()
+    public function testInvalidServiceError(): void
     {
         $this->mock->reset();
         $this->mock->append(new Response(200, [], $this->responseMockForInvalidService));
@@ -148,7 +148,7 @@ class CalculateFreightTest extends TestCase
         $this->assertEquals($expected, $freight->calculate());
     }
 
-    public function testWithSingleService()
+    public function testWithSingleService(): void
     {
         $this->mock->reset();
         $this->mock->append(new Response(200, [], $this->responseMockForSedex));
@@ -174,7 +174,7 @@ class CalculateFreightTest extends TestCase
         $this->assertEquals($expected, $freight->calculate());
     }
 
-    public function testWithMultipleServices()
+    public function testWithMultipleServices(): void
     {
         $this->mock->reset();
         $this->mock->append(new Response(200, [], $this->responseMockForSedex));

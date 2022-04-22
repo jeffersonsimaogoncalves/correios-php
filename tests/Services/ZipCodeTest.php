@@ -14,14 +14,14 @@ class ZipCodeTest extends TestCase
      */
     protected $http;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
         $this->http = new HttpClient;
     }
 
-    public function testNotFoundZipCode()
+    public function testNotFoundZipCode(): void
     {
         $zipcode = new ZipCode($this->http);
 
@@ -30,7 +30,7 @@ class ZipCodeTest extends TestCase
         ], $zipcode->find('99999-999'));
     }
 
-    public function testFindAddressByZipCode()
+    public function testFindAddressByZipCode(): void
     {
         $zipcode = new ZipCode($this->http);
 
